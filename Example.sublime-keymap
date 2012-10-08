@@ -1,0 +1,4 @@
+[
+	{ "keys": ["alt+up"], "command": "smart_cursor", "args": {"cmd": "move", "by": "lines", "forward": false} },
+	{ "keys": ["alt+down"], "command": "smart_cursor", "args": {"cmd": "move", "by": "lines", "forward": true} }
+]
