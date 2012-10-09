@@ -44,7 +44,13 @@ class SmartCursorView(object):
                 for sel, selmod in zip(self.view.sel(), self.selmodcol):
                     last_row, last_col = selmod
                     row, col = self.view.rowcol(sel.begin())
-                    new_sel.append(self.view.text_point(row, last_col))
+                    newpos = self.view.text_point(row, last_col)
+                    endlinepos = self.view.line(sel.begin()).end()
+                    # last edit pos is beyond the end of line, we replace it with the end of line pos.
+                    # there's no way currently to put the cursor at the right position without changing everything.
+                    if newpos > endlinepos:
+                        newpos = endlinepos
+                    new_sel.append(newpos)
         return new_sel
 
 
@@ -72,7 +78,6 @@ class SmartCursorListener(sublime_plugin.EventListener):
 
 
 class SmartCursorCommand(sublime_plugin.TextCommand):
-
     def run(self, edit, cmd="", **kwargs):
         stack = stack_view(self.view)
         new_sel = stack.get_new_sel()
