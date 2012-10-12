@@ -17,7 +17,7 @@ class SmartCursorView(object):
         # self.sel = list(self.view.sel())
         self.selcol = []
         for sel in list(self.view.sel()):
-            self.selcol.append(self.view.rowcol(sel.begin()))
+            self.selcol.append((self.view.rowcol(sel.begin()), self.view.text_to_layout(sel.begin())[0]))
 
     def save(self):
         if not self.selmodcol and self.selcol is not None:
@@ -33,7 +33,7 @@ class SmartCursorView(object):
         if self.last_selmod is not None and self.last_selmod != list(self.view.sel()):
             self.reset()
         elif self.selmodcol:
-            for sel, selmod in zip(self.view.sel(), self.selmodcol):
+            for sel, (selmod, xpos) in zip(self.view.sel(), self.selmodcol):
                 if self.view.rowcol(sel.begin())[0] != selmod[0]:
                     self.reset()
 
@@ -41,15 +41,8 @@ class SmartCursorView(object):
         new_sel = []
         if self.selmodcol is not None:
             if len(self.view.sel()) == len(self.selmodcol):
-                for sel, selmod in zip(self.view.sel(), self.selmodcol):
-                    last_row, last_col = selmod
-                    row, col = self.view.rowcol(sel.begin())
-                    newpos = self.view.text_point(row, last_col)
-                    endlinepos = self.view.line(sel.begin()).end()
-                    # last edit pos is beyond the end of line, we replace it with the end of line pos.
-                    # there's no way currently to put the cursor at the right position without changing everything.
-                    if newpos > endlinepos:
-                        newpos = endlinepos
+                for sel, (selmod, xpos) in zip(self.view.sel(), self.selmodcol):
+                    newpos = sublime.Region(sel.a, sel.b, xpos)
                     new_sel.append(newpos)
         return new_sel
 
@@ -89,9 +82,15 @@ class SmartCursorCommand(sublime_plugin.TextCommand):
 
 
 
-# type a char or paste from clipboard:
+# type a char, paste from clipboard:
 # on_modified (23, 15)
-# on_selected (23, 15)
+# on_selection_modified (23, 15)
 # undo:
-# on_selected (23, 14)
+# on_selection_modified (23, 14)
 # on_modified (23, 14)
+#
+# type a char, paste from clipboard:
+# on_modified (23, 15)
+# on_selection_modified (23, 15)
+# soft_undo:
+# on_selection_modified (23, 14)
