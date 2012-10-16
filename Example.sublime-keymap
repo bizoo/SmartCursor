@@ -1,4 +1,24 @@
 [
-	{ "keys": ["alt+up"], "command": "smart_cursor", "args": {"cmd": "move", "by": "lines", "forward": false} },
-	{ "keys": ["alt+down"], "command": "smart_cursor", "args": {"cmd": "move", "by": "lines", "forward": true} }
+	// Add alt+up/down for SmartCursor
+	{ "keys": ["alt+up"], "command": "smart_cursor", "args": {"cmd": "move", "by": "lines", "forward": false}, "context":
+		[
+			{ "key": "auto_complete_visible", "operator": "equal", "operand": false }
+		]
+	},
+	{ "keys": ["alt+down"], "command": "smart_cursor", "args": {"cmd": "move", "by": "lines", "forward": true}, "context":
+		[
+			{ "key": "auto_complete_visible", "operator": "equal", "operand": false }
+		]
+	},
+	// Replace standard up/down with SmartCursor
+	{ "keys": ["up"], "command": "smart_cursor", "args": {"cmd": "move", "by": "lines", "forward": false}, "context":
+		[
+			{ "key": "auto_complete_visible", "operator": "equal", "operand": false }
+		]
+	},
+	{ "keys": ["down"], "command": "smart_cursor", "args": {"cmd": "move", "by": "lines", "forward": true}, "context":
+		[
+			{ "key": "auto_complete_visible", "operator": "equal", "operand": false }
+		]
+	} 
 ]

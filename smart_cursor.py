@@ -17,7 +17,7 @@ class SmartCursorView(object):
         # self.sel = list(self.view.sel())
         self.selcol = []
         for sel in list(self.view.sel()):
-            self.selcol.append((self.view.rowcol(sel.begin()), self.view.text_to_layout(sel.begin())[0]))
+            self.selcol.append((self.view.rowcol(sel.a), self.view.text_to_layout(sel.a)[0]))
 
     def save(self):
         if not self.selmodcol and self.selcol is not None:
@@ -34,7 +34,7 @@ class SmartCursorView(object):
             self.reset()
         elif self.selmodcol:
             for sel, (selmod, xpos) in zip(self.view.sel(), self.selmodcol):
-                if self.view.rowcol(sel.begin())[0] != selmod[0]:
+                if self.view.rowcol(sel.a)[0] != selmod[0]:
                     self.reset()
 
     def get_new_sel(self):
@@ -42,7 +42,10 @@ class SmartCursorView(object):
         if self.selmodcol is not None:
             if len(self.view.sel()) == len(self.selmodcol):
                 for sel, (selmod, xpos) in zip(self.view.sel(), self.selmodcol):
-                    newpos = sublime.Region(sel.a, sel.b, xpos)
+                    if self.view.find('\n', sel.a, sublime.LITERAL):
+                        newpos = sublime.Region(sel.a, sel.b, xpos)
+                    else:
+                        newpos = sel
                     new_sel.append(newpos)
         return new_sel
 
