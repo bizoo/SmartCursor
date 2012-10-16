@@ -37,15 +37,15 @@ class SmartCursorView(object):
                 if self.view.rowcol(sel.a)[0] != selmod[0]:
                     self.reset()
 
-    def get_new_sel(self):
+    def get_new_sel(self, forward=None):
         new_sel = []
         if self.selmodcol is not None:
             if len(self.view.sel()) == len(self.selmodcol):
                 for sel, (selmod, xpos) in zip(self.view.sel(), self.selmodcol):
-                    if self.view.find('\n', sel.a, sublime.LITERAL):
-                        newpos = sublime.Region(sel.a, sel.b, xpos)
-                    else:
+                    if forward is True and self.view.find('\n', sel.a, sublime.LITERAL) is None:
                         newpos = sel
+                    else:
+                        newpos = sublime.Region(sel.a, sel.b, xpos)
                     new_sel.append(newpos)
         return new_sel
 
@@ -76,7 +76,7 @@ class SmartCursorListener(sublime_plugin.EventListener):
 class SmartCursorCommand(sublime_plugin.TextCommand):
     def run(self, edit, cmd="", **kwargs):
         stack = stack_view(self.view)
-        new_sel = stack.get_new_sel()
+        new_sel = stack.get_new_sel(kwargs.get('forward'))
         if new_sel:
             self.view.sel().clear()
             for sel in new_sel:
