@@ -8,13 +8,11 @@ stack_views = {}
 class SmartCursorView(object):
     def __init__(self, view):
         self.view = view
-        # self.sel = None
         self.selcol = None
         self.selmodcol = None
         self.last_selmod = None
 
     def save_sel(self):
-        # self.sel = list(self.view.sel())
         self.selcol = []
         for sel in list(self.view.sel()):
             self.selcol.append((self.view.rowcol(sel.a), self.view.text_to_layout(sel.a)[0]))
@@ -41,11 +39,15 @@ class SmartCursorView(object):
         new_sel = []
         if self.selmodcol is not None:
             if len(self.view.sel()) == len(self.selmodcol):
+                # if only one caret positioned at the last line of the file -> do nothing
+                if (len(self.view.sel()) == 1) and forward is True:
+                    caret_pos = self.view.sel()[0].a
+                    line_end_pos = self.view.full_line(caret_pos).end() - 1
+                    if self.view.substr(line_end_pos) != '\n' and \
+                        (self.view.text_to_layout(caret_pos)[1] == self.view.text_to_layout(line_end_pos)[1]):
+                        return
                 for sel, (selmod, xpos) in zip(self.view.sel(), self.selmodcol):
-                    if forward is True and self.view.find('\n', sel.a, sublime.LITERAL) is None:
-                        newpos = sel
-                    else:
-                        newpos = sublime.Region(sel.a, sel.b, xpos)
+                    newpos = sublime.Region(sel.a, sel.b, xpos)
                     new_sel.append(newpos)
         return new_sel
 
@@ -82,7 +84,6 @@ class SmartCursorCommand(sublime_plugin.TextCommand):
             for sel in new_sel:
                 self.view.sel().add(sel)
         self.view.run_command(cmd, kwargs)
-
 
 
 # type a char, paste from clipboard:
