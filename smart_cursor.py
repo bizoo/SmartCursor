@@ -39,15 +39,17 @@ class SmartCursorView(object):
         new_sel = []
         if self.selmodcol is not None:
             if len(self.view.sel()) == len(self.selmodcol):
-                # if only one caret positioned at the last line of the file -> do nothing
-                if (len(self.view.sel()) == 1) and forward is True:
-                    caret_pos = self.view.sel()[0].a
-                    line_end_pos = self.view.full_line(caret_pos).end() - 1
-                    if self.view.substr(line_end_pos) != '\n' and \
-                        (self.view.text_to_layout(caret_pos)[1] == self.view.text_to_layout(line_end_pos)[1]):
-                        return
                 for sel, (selmod, xpos) in zip(self.view.sel(), self.selmodcol):
-                    newpos = sublime.Region(sel.a, sel.b, xpos)
+                    caret_pos = sel.a
+                    line_end_pos = self.view.full_line(caret_pos).end() - 1
+                    # when the cursor is at the last line, setting the xpos move the cursor horizontally.
+                    # bug ?
+                    if self.view.substr(line_end_pos) != '\n' and \
+                        (self.view.text_to_layout(caret_pos)[1] == self.view.text_to_layout(line_end_pos)[1]) and \
+                        (forward is True):
+                        newpos = sublime.Region(sel.a, sel.b)
+                    else:
+                        newpos = sublime.Region(sel.a, sel.b, xpos)
                     new_sel.append(newpos)
         return new_sel
 
