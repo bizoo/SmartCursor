@@ -47,7 +47,7 @@ class SmartCursorView(object):
                     if self.view.substr(line_end_pos) != '\n' and \
                         (self.view.text_to_layout(caret_pos)[1] == self.view.text_to_layout(line_end_pos)[1]) and \
                         (forward is True):
-                        newpos = sublime.Region(sel.a, sel.b)
+                        newpos = sel
                     else:
                         newpos = sublime.Region(sel.a, sel.b, xpos)
                     new_sel.append(newpos)
