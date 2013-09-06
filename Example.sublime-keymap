@@ -3,26 +3,30 @@
 	{ "keys": ["alt+up"], "command": "smart_cursor", "args": {"cmd": "move", "by": "lines", "forward": false}, "context":
 		[
 			{ "key": "auto_complete_visible", "operator": "equal", "operand": false },
-			{ "key": "setting.command_mode", "operand": false }
+			{ "key": "setting.command_mode", "operand": false },
+			{ "key": "setting.is_widget", "operator": "equal", "operand": false }
 		]
 	},
 	{ "keys": ["alt+down"], "command": "smart_cursor", "args": {"cmd": "move", "by": "lines", "forward": true}, "context":
 		[
 			{ "key": "auto_complete_visible", "operator": "equal", "operand": false },
-			{ "key": "setting.command_mode", "operand": false }
+			{ "key": "setting.command_mode", "operand": false },
+			{ "key": "setting.is_widget", "operator": "equal", "operand": false }
 		]
 	},
 	// Replace standard up/down with SmartCursor
 	{ "keys": ["up"], "command": "smart_cursor", "args": {"cmd": "move", "by": "lines", "forward": false}, "context":
 		[
 			{ "key": "auto_complete_visible", "operator": "equal", "operand": false },
-			{ "key": "setting.command_mode", "operand": false }
+			{ "key": "setting.command_mode", "operand": false },
+			{ "key": "setting.is_widget", "operator": "equal", "operand": false }
 		]
 	},
 	{ "keys": ["down"], "command": "smart_cursor", "args": {"cmd": "move", "by": "lines", "forward": true}, "context":
 		[
 			{ "key": "auto_complete_visible", "operator": "equal", "operand": false },
-			{ "key": "setting.command_mode", "operand": false }
+			{ "key": "setting.command_mode", "operand": false },
+			{ "key": "setting.is_widget", "operator": "equal", "operand": false }
 		]
 	} 
 ]
