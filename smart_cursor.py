@@ -34,6 +34,7 @@ class SmartCursorView(object):
             for sel, (selmod, xpos) in zip(self.view.sel(), self.selmodcol):
                 if self.view.rowcol(sel.a)[0] != selmod[0]:
                     self.reset()
+                    return
 
     def get_new_sel(self, forward=None):
         new_sel = []
