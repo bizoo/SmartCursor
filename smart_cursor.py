@@ -6,6 +6,7 @@ stack_views = {}
 
 
 class SmartCursorView(object):
+
     def __init__(self, view):
         self.view = view
         self.selcol = None
@@ -15,7 +16,8 @@ class SmartCursorView(object):
     def save_sel(self):
         self.selcol = []
         for sel in list(self.view.sel()):
-            self.selcol.append((self.view.rowcol(sel.a), self.view.text_to_layout(sel.a)[0]))
+            self.selcol.append(
+                (self.view.rowcol(sel.a), self.view.text_to_layout(sel.a)[0]))
 
     def save(self):
         if not self.selmodcol and self.selcol is not None:
@@ -46,8 +48,8 @@ class SmartCursorView(object):
                     # when the cursor is at the last line, setting the xpos move the cursor horizontally.
                     # bug ?
                     if self.view.substr(line_end_pos) != '\n' and \
-                        (self.view.text_to_layout(caret_pos)[1] == self.view.text_to_layout(line_end_pos)[1]) and \
-                        (forward is True):
+                            (self.view.text_to_layout(caret_pos)[1] == self.view.text_to_layout(line_end_pos)[1]) and \
+                            (forward is True):
                         newpos = sel
                     else:
                         newpos = sublime.Region(sel.a, sel.b, xpos)
@@ -62,6 +64,7 @@ def stack_view(view):
 
 
 class SmartCursorListener(sublime_plugin.EventListener):
+
     def on_close(self, view):
         if view.id() in stack_views:
             stack_views[view.id()].view = None
@@ -79,6 +82,7 @@ class SmartCursorListener(sublime_plugin.EventListener):
 
 
 class SmartCursorCommand(sublime_plugin.TextCommand):
+
     def run(self, edit, cmd="", **kwargs):
         stack = stack_view(self.view)
         new_sel = stack.get_new_sel(kwargs.get('forward'))
